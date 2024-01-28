@@ -1,24 +1,53 @@
-# README
+## Create a new Rails application as an API of course, then create the following tables
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+- employee
+  - first_name:string
+  - last_name:string
 
-Things you may want to cover:
+- employee_details
+  - employee:references
+  - bio:text
+  - salary:integer
+  - 
+Create a one-to-one association between the employee and employee_details table.
 
-* Ruby version
+Then create a new employee along with their employee details.
 
-* System dependencies
 
-* Configuration
+1. Create rails api project in wsl
+  - run `rails new employee_api_lesson_exercise --api`
+  - change directory in project created `cd employee_api_lesson_exercise`
+  - open new project created in vscode `code .`
 
-* Database creation
+2. In terminal run the following to create/generate the two models
+  - `rails generate model Employee first_name:string last_name:string`
+    Then run
+  - `rails generate model EmployeeDetail employee:references bio:text salary:int`
 
-* Database initialization
+3. Add code to files in employee.rb and employee_detail.rb, located in app/models/
 
-* How to run the test suite
+In *employee.rb* file:
+```
+class Employee < ApplicationRecord
+  validates :first_name, presence: true
+  validates :last_name, presence: true
 
-* Services (job queues, cache servers, search engines, etc.)
+  has_one :employee_detail
+end
+```
 
-* Deployment instructions
+In *employee_detail.rb* file:
+```
+class EmployeeDetail < ApplicationRecord
+  belongs_to :employee
+end
+```
 
-* ...
+4. Run `rails db:migrate` to run migrations to create the database tables
+
+5. Run `rails console` to be able to create the new employee and employee details from the next step
+
+6. Run the following code to create an *Employee* record and associate the *EmployeeDetail* record with a one-to-one association:
+   - `employee = Employee.create(first_name: "John", last_name: "Doe", employee_detail: EmployeeDetail.new(bio: "I am a software engineer", salary: 100000))`
+  
+*A record is an individual entry in the database table and each record represents a specific instance of the model*
